@@ -1,0 +1,60 @@
+<div class="chat-container">
+  <div class="chat-header">
+    <div class="file-info" *ngIf="file">
+      <h2>Chat with AI Agent</h2>
+      <p class="file-details">File: <strong>{{ file.fileName }}</strong></p>
+    </div>
+    <a routerLink="/" class="btn-back">← Back to Files</a>
+  </div>
+
+  <div class="chat-content" *ngIf="!isLoadingHistory; else loadingHistory">
+    <div class="chat-messages" id="chatMessages">
+      <div *ngIf="messages.length === 0" class="no-messages">
+        <p>No messages yet. Start a conversation about your file!</p>
+      </div>
+
+      <div 
+        *ngFor="let message of messages" 
+        class="message"
+        [ngClass]="{ 'message-user': message.sender === 'user', 'message-bot': message.sender === 'bot' }">
+        <div class="message-sender">{{ message.sender === 'user' ? 'You' : 'AI Agent' }}</div>
+        <div class="message-content">{{ message.message }}</div>
+        <div class="message-time">{{ formatTime(message.timestamp) }}</div>
+      </div>
+
+      <div class="message message-loading" *ngIf="isLoading">
+        <div class="message-sender">AI Agent</div>
+        <div class="message-content typing">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="error-message" *ngIf="error">
+      {{ error }}
+    </div>
+
+    <div class="chat-input-area">
+      <div class="input-group">
+        <textarea
+          [(ngModel)]="messageInput"
+          (keypress)="onKeyPress($event)"
+          [disabled]="isLoading || !fileId"
+          placeholder="Ask the AI agent about your file... (Press Enter to send)"
+          class="message-input"></textarea>
+        <button
+          (click)="sendMessage()"
+          [disabled]="!messageInput.trim() || isLoading || !fileId"
+          class="btn-send">
+          {{ isLoading ? 'Sending...' : 'Send' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #loadingHistory>
+    <div class="loading-spinner">
+      <p>Loading chat history...</p>
+    </div>
+  </ng-template>
+</div>
