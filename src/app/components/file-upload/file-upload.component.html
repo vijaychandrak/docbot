@@ -1,25 +1,13 @@
 <div class="file-upload-container">
   <div class="upload-section">
     <h2>Upload Files</h2>
-    
-    <div 
-      class="drop-zone"
-      [class.drag-over]="dragOver"
-      (dragover)="onDragOver($event)"
-      (dragleave)="onDragLeave($event)"
-      (drop)="onDrop($event)">
-      <input 
-        type="file" 
-        #fileInput 
-        (change)="onFileSelected($event)"
-        hidden>
+
+    <div class="drop-zone" [class.drag-over]="dragOver" (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+      <input type="file" #fileInput (change)="onFileSelected($event)" hidden>
       <div class="drop-content">
         <p>Drag and drop your file here, or click to select</p>
-        <button 
-          type="button"
-          class="btn-select"
-          (click)="fileInput.click()"
-          [disabled]="isUploading">
+        <button type="button" class="btn-select" (click)="fileInput.click()" [disabled]="isUploading">
           Choose File
         </button>
       </div>
@@ -29,11 +17,7 @@
       <p><strong>Selected:</strong> {{ selectedFile.name }}</p>
     </div>
 
-    <button 
-      type="button"
-      class="btn-upload"
-      (click)="uploadFile()"
-      [disabled]="!selectedFile || isUploading">
+    <button type="button" class="btn-upload" (click)="uploadFile()" [disabled]="!selectedFile || isUploading">
       {{ isUploading ? 'Uploading...' : 'Upload' }}
     </button>
 
@@ -44,7 +28,7 @@
 
   <div class="files-section">
     <h2>Uploaded Files</h2>
-    
+
     <div class="table-container">
       <table class="files-table" *ngIf="files.length > 0; else noFiles">
         <thead>
@@ -65,17 +49,10 @@
             <td>{{ formatDate(file.uploadedAt) }}</td>
             <td>{{ getFileSize(file.fileSize) }}</td>
             <td class="actions">
-              <button 
-                type="button"
-                class="btn-chat"
-                routerLink="/chat"
-                [queryParams]="{ fileId: file.id }">
+              <a class="btn-chat" [href]="'/chat?fileId=' + file.id" target="_blank">
                 Chat
-              </button>
-              <button 
-                type="button"
-                class="btn-delete"
-                (click)="deleteFile(file.id)">
+              </a>
+              <button type="button" class="btn-delete" (click)="deleteFile(file.id)">
                 Delete
               </button>
             </td>

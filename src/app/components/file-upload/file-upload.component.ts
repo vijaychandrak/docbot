@@ -6,11 +6,10 @@ import { FileService } from '../../services/file.service';
 import { UploadedFile } from '../../models/file.model';
 
 @Component({
-  selector: 'app-file-upload',
-  standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
-  templateUrl: './file-upload.component.html',
-  styleUrls: ['./file-upload.component.css']
+    selector: 'app-file-upload',
+    imports: [CommonModule, FormsModule, RouterModule],
+    templateUrl: './file-upload.component.html',
+    styleUrls: ['./file-upload.component.css']
 })
 export class FileUploadComponent implements OnInit {
   files: UploadedFile[] = [];

@@ -7,27 +7,40 @@ import { UploadedFile } from '../models/file.model';
   providedIn: 'root'
 })
 export class FileService {
-  private apiUrl = 'http://localhost:3000/api/files';
+  private apiUrl = '/api/files';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   /**
-   * Upload a file to the server
+   * Get or generate a persistent userId stored in localStorage
+   */
+  getUserId(): string {
+    let userId = localStorage.getItem('docbot_user_id');
+    if (!userId) {
+      userId = crypto.randomUUID();
+      localStorage.setItem('docbot_user_id', userId);
+    }
+    return userId;
+  }
+
+  /**
+   * Upload a file to the server with userId
    * @param file - The file to upload
    * @returns Observable of the uploaded file response
    */
   uploadFile(file: File): Observable<UploadedFile> {
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('userId', this.getUserId());
     return this.http.post<UploadedFile>(`${this.apiUrl}/upload`, formData);
   }
 
   /**
-   * Get all uploaded files
+   * Get uploaded files for the current user
    * @returns Observable array of uploaded files
    */
   getUploadedFiles(): Observable<UploadedFile[]> {
-    return this.http.get<UploadedFile[]>(`${this.apiUrl}`);
+    return this.http.get<UploadedFile[]>(`${this.apiUrl}/user/${this.getUserId()}`);
   }
 
   /**

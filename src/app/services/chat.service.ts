@@ -7,9 +7,9 @@ import { ChatRequest, ChatResponse } from '../models/chat.model';
   providedIn: 'root'
 })
 export class ChatService {
-  private apiUrl = 'http://localhost:3000/api/chat';
+  private apiUrl = '/api/chat';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   /**
    * Send a chat message with file context
