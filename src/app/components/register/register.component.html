@@ -1,0 +1,47 @@
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h2>Create Account</h2>
+            <p>Sign up for a new DocBot account</p>
+        </div>
+
+        <form (ngSubmit)="register()" class="auth-form">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" [(ngModel)]="username" name="username" placeholder="Choose a username"
+                    [disabled]="isLoading" autocomplete="username">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" [(ngModel)]="email" name="email" placeholder="Enter your email"
+                    [disabled]="isLoading" autocomplete="email">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" [(ngModel)]="password" name="password"
+                    placeholder="Create a password (min. 6 characters)" [disabled]="isLoading"
+                    autocomplete="new-password">
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword"
+                    placeholder="Confirm your password" [disabled]="isLoading" autocomplete="new-password">
+            </div>
+
+            <div class="error-message" *ngIf="errorMessage">
+                {{ errorMessage }}
+            </div>
+
+            <button type="submit" class="btn-submit" [disabled]="isLoading">
+                {{ isLoading ? 'Creating Account...' : 'Create Account' }}
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Already have an account? <a routerLink="/login">Sign In</a></p>
+        </div>
+    </div>
+</div>

@@ -1,1 +1,10 @@
+<nav class="navbar" *ngIf="authService.isLoggedIn()">
+    <div class="nav-brand">
+        <a routerLink="/">DocBot</a>
+    </div>
+    <div class="nav-actions">
+        <span class="nav-user">{{ authService.getUser()?.username }}</span>
+        <button class="btn-logout" (click)="logout()">Logout</button>
+    </div>
+</nav>
 <router-outlet></router-outlet>
