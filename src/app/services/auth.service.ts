@@ -31,6 +31,8 @@ export class AuthService {
     logout(): void {
         localStorage.removeItem(this.tokenKey);
         localStorage.removeItem(this.userKey);
+        // clean up legacy client-side user id if present
+        localStorage.removeItem('docbot_user_id');
         this.loggedIn$.next(false);
         this.router.navigate(['/login']);
     }
@@ -59,6 +61,8 @@ export class AuthService {
     private storeAuth(response: AuthResponse): void {
         localStorage.setItem(this.tokenKey, response.token);
         localStorage.setItem(this.userKey, JSON.stringify(response));
+        // remove legacy local docbot_user_id if present
+        localStorage.removeItem('docbot_user_id');
         this.loggedIn$.next(true);
     }
 }

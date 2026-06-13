@@ -21,6 +21,10 @@
       {{ isUploading ? 'Uploading...' : 'Upload' }}
     </button>
 
+    <div class="progress" *ngIf="isUploading">
+      <div class="progress-bar" [style.width.%]="uploadProgress">{{ uploadProgress }}%</div>
+    </div>
+
     <div class="message" [ngClass]="{ error: uploadMessage.includes('Error') }" *ngIf="uploadMessage">
       {{ uploadMessage }}
     </div>

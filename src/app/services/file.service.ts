@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UploadedFile } from '../models/file.model';
 
@@ -11,28 +11,19 @@ export class FileService {
 
   constructor(private http: HttpClient) { }
 
-  /**
-   * Get or generate a persistent userId stored in localStorage
-   */
-  getUserId(): string {
-    let userId = localStorage.getItem('docbot_user_id');
-    if (!userId) {
-      userId = crypto.randomUUID();
-      localStorage.setItem('docbot_user_id', userId);
-    }
-    return userId;
-  }
 
   /**
    * Upload a file to the server with userId
    * @param file - The file to upload
    * @returns Observable of the uploaded file response
    */
-  uploadFile(file: File): Observable<UploadedFile> {
+  uploadFile(file: File): Observable<HttpEvent<UploadedFile>> {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('userId', this.getUserId());
-    return this.http.post<UploadedFile>(`${this.apiUrl}/upload`, formData);
+    return this.http.post<UploadedFile>(`${this.apiUrl}/upload`, formData, {
+      reportProgress: true,
+      observe: 'events'
+    });
   }
 
   /**
@@ -40,7 +31,7 @@ export class FileService {
    * @returns Observable array of uploaded files
    */
   getUploadedFiles(): Observable<UploadedFile[]> {
-    return this.http.get<UploadedFile[]>(`${this.apiUrl}/user/${this.getUserId()}`);
+    return this.http.get<UploadedFile[]>(`${this.apiUrl}/me`);
   }
 
   /**

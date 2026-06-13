@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpEventType } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -18,6 +19,7 @@ export class FileUploadComponent implements OnInit {
   uploadMessage = '';
   selectedFile: File | null = null;
   dragOver = false;
+  uploadProgress = 0;
 
   constructor(private fileService: FileService) { }
 
@@ -76,19 +78,28 @@ export class FileUploadComponent implements OnInit {
     }
 
     this.isUploading = true;
-    this.uploadMessage = 'Uploading...';
+    this.uploadProgress = 0;
 
     this.fileService.uploadFile(this.selectedFile).subscribe({
-      next: (response) => {
-        this.files.unshift(response);
-        this.uploadMessage = 'File uploaded successfully!';
-        this.selectedFile = null;
-        this.isUploading = false;
-        setTimeout(() => this.uploadMessage = '', 3000);
+      next: (event) => {
+        if (event.type === HttpEventType.UploadProgress) {
+          const percentDone = Math.round(100 * (event.loaded / (event.total ?? 1)));
+          this.uploadProgress = percentDone;
+          this.uploadMessage = `Uploading... ${percentDone}%`;
+        } else if (event.type === HttpEventType.Response) {
+          const response = event.body as any;
+          this.files.unshift(response);
+          this.uploadMessage = 'File uploaded successfully!';
+          this.selectedFile = null;
+          this.isUploading = false;
+          this.uploadProgress = 0;
+          setTimeout(() => this.uploadMessage = '', 3000);
+        }
       },
       error: (error) => {
         this.uploadMessage = 'Error uploading file: ' + (error.error?.message || error.message);
         this.isUploading = false;
+        this.uploadProgress = 0;
       }
     });
   }

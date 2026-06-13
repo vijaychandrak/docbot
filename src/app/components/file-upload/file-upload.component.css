@@ -111,6 +111,25 @@
   border-color: #f5c6cb;
 }
 
+.progress {
+  width: 100%;
+  background: #f1f1f1;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+
+.progress-bar {
+  height: 18px;
+  background: linear-gradient(90deg, #4caf50, #66bb6a);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  transition: width 0.25s ease;
+}
+
 .files-section h2 {
   margin-top: 0;
   color: #333;
