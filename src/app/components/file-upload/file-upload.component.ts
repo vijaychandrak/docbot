@@ -20,6 +20,9 @@ export class FileUploadComponent implements OnInit {
   selectedFile: File | null = null;
   dragOver = false;
   uploadProgress = 0;
+  showDeleteModal = false;
+  fileToDeleteId: string | null = null;
+  expandedFileIds: string[] = [];
 
   constructor(private fileService: FileService) { }
 
@@ -119,19 +122,39 @@ export class FileUploadComponent implements OnInit {
   }
 
   /**
-   * Delete a file
+   * Open delete confirmation modal
    */
-  deleteFile(fileId: string): void {
-    if (confirm('Are you sure you want to delete this file?')) {
-      this.fileService.deleteFile(fileId).subscribe({
-        next: () => {
-          this.files = this.files.filter(f => f.id !== fileId);
-        },
-        error: (error) => {
-          console.error('Error deleting file:', error);
-        }
-      });
+  openDeleteModal(fileId: string): void {
+    this.fileToDeleteId = fileId;
+    this.showDeleteModal = true;
+  }
+
+  /**
+   * Close delete confirmation modal
+   */
+  closeDeleteModal(): void {
+    this.showDeleteModal = false;
+    this.fileToDeleteId = null;
+  }
+
+  /**
+   * Confirm the file deletion
+   */
+  confirmDelete(): void {
+    if (!this.fileToDeleteId) {
+      return;
     }
+
+    this.fileService.deleteFile(this.fileToDeleteId).subscribe({
+      next: () => {
+        this.files = this.files.filter(f => f.id !== this.fileToDeleteId);
+        this.closeDeleteModal();
+      },
+      error: (error) => {
+        console.error('Error deleting file:', error);
+        this.closeDeleteModal();
+      }
+    });
   }
 
   /**
@@ -139,6 +162,46 @@ export class FileUploadComponent implements OnInit {
    */
   formatDate(date: Date): string {
     return new Date(date).toLocaleString();
+  }
+
+  formatShortDate(date: Date): string {
+    return new Date(date).toLocaleDateString();
+  }
+
+  getDisplayFileName(fileName: string): string {
+    const lastDotIndex = fileName.lastIndexOf('.');
+    if (lastDotIndex <= 0) {
+      return fileName;
+    }
+    return fileName.substring(0, lastDotIndex);
+  }
+
+  getTruncatedFileName(fileName: string, maxLength: number = 18): string {
+    if (!fileName || fileName.length <= maxLength) {
+      return fileName;
+    }
+    return fileName.substring(0, maxLength).trimEnd() + '...';
+  }
+
+  isFileExpanded(fileId: string): boolean {
+    return this.expandedFileIds.includes(fileId);
+  }
+
+  toggleExpandedFile(fileId: string): void {
+    if (this.isFileExpanded(fileId)) {
+      this.expandedFileIds = this.expandedFileIds.filter((id) => id !== fileId);
+      return;
+    }
+
+    this.expandedFileIds.push(fileId);
+  }
+
+  getMobileFileName(file: UploadedFile): string {
+    if (this.isFileExpanded(file.id)) {
+      return file.fileName;
+    }
+
+    return this.getTruncatedFileName(file.fileName, 18);
   }
 
   /**
