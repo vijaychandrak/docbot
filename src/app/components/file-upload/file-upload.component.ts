@@ -6,6 +6,9 @@ import { RouterModule } from '@angular/router';
 import { FileService } from '../../services/file.service';
 import { UploadedFile } from '../../models/file.model';
 
+type SortColumn = 'fileName' | 'fileExtension' | 'uploadedAt' | 'fileSize';
+type SortDirection = 'asc' | 'desc';
+
 @Component({
   selector: 'app-file-upload',
   standalone: true,
@@ -23,6 +26,8 @@ export class FileUploadComponent implements OnInit {
   showDeleteModal = false;
   fileToDeleteId: string | null = null;
   expandedFileIds: string[] = [];
+  sortColumn: SortColumn = 'uploadedAt';
+  sortDirection: SortDirection = 'desc';
 
   constructor(private fileService: FileService) { }
 
@@ -91,7 +96,7 @@ export class FileUploadComponent implements OnInit {
           this.uploadMessage = `Uploading... ${percentDone}%`;
         } else if (event.type === HttpEventType.Response) {
           const response = event.body as any;
-          this.files.unshift(response);
+          this.files = this.sortFileList([...this.files, response]);
           this.uploadMessage = 'File uploaded successfully!';
           this.selectedFile = null;
           this.isUploading = false;
@@ -113,11 +118,61 @@ export class FileUploadComponent implements OnInit {
   loadUploadedFiles(): void {
     this.fileService.getUploadedFiles().subscribe({
       next: (files) => {
-        this.files = files;
+        this.files = this.sortFileList(files);
       },
       error: (error) => {
         console.error('Error loading files:', error);
       }
+    });
+  }
+
+  sortFiles(column: SortColumn): void {
+    if (this.sortColumn === column) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortColumn = column;
+      this.sortDirection = column === 'uploadedAt' ? 'desc' : 'asc';
+    }
+
+    this.files = this.sortFileList(this.files);
+  }
+
+  getSortIndicator(column: SortColumn): string {
+    if (this.sortColumn !== column) {
+      return '↕';
+    }
+
+    return this.sortDirection === 'asc' ? '↑' : '↓';
+  }
+
+  getAriaSort(column: SortColumn): 'ascending' | 'descending' | null {
+    if (this.sortColumn !== column) {
+      return null;
+    }
+
+    return this.sortDirection === 'asc' ? 'ascending' : 'descending';
+  }
+
+  private sortFileList(files: UploadedFile[]): UploadedFile[] {
+    return [...files].sort((left, right) => {
+      let comparison: number;
+
+      switch (this.sortColumn) {
+        case 'fileName':
+          comparison = left.fileName.localeCompare(right.fileName, undefined, { sensitivity: 'base', numeric: true });
+          break;
+        case 'fileExtension':
+          comparison = left.fileExtension.localeCompare(right.fileExtension, undefined, { sensitivity: 'base' });
+          break;
+        case 'uploadedAt':
+          comparison = new Date(left.uploadedAt).getTime() - new Date(right.uploadedAt).getTime();
+          break;
+        case 'fileSize':
+          comparison = left.fileSize - right.fileSize;
+          break;
+      }
+
+      return this.sortDirection === 'asc' ? comparison : -comparison;
     });
   }
 

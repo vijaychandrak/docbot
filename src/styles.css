@@ -90,6 +90,80 @@ app-root {
   gap: 10px;
 }
 
+.app-modal-actions .app-btn {
+  min-width: 96px;
+  min-height: 40px;
+  padding: 10px 16px;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.app-selection-notice {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 15px 0;
+  padding: 12px 14px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-left: 4px solid #3b82f6;
+  border-radius: 6px;
+}
+
+.app-selection-notice-label {
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.app-selection-notice p {
+  color: #1e3a8a;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.app-date-time-desktop {
+  display: inline;
+}
+
+.app-date-time-mobile {
+  display: none;
+}
+
+.files-table .sort-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.files-table .sort-button:focus-visible {
+  outline: 2px solid #4f8ef7;
+  outline-offset: 3px;
+}
+
+.files-table .sort-indicator {
+  color: #64748b;
+  font-size: 12px;
+}
+
+@media (max-width: 768px) {
+  .app-date-time-desktop {
+    display: none;
+  }
+
+  .app-date-time-mobile {
+    display: inline;
+  }
+}
+
 .app-checkbox {
   width: 16px;
   height: 16px;

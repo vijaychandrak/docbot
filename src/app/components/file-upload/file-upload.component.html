@@ -13,11 +13,12 @@
       </div>
     </div>
 
-    <div class="selected-file" *ngIf="selectedFile">
-      <p><strong>Selected:</strong> {{ selectedFile.name }}</p>
+    <div class="app-selection-notice" *ngIf="selectedFile" role="status">
+      <span class="app-selection-notice-label">Ready to upload</span>
+      <p><strong>{{ selectedFile.name }}</strong></p>
     </div>
 
-    <button type="button" class="btn-upload app-btn app-btn-secondary" (click)="uploadFile()" [disabled]="!selectedFile || isUploading">
+    <button type="button" class="btn-upload app-btn app-btn-secondary" *ngIf="selectedFile" (click)="uploadFile()" [disabled]="isUploading">
       {{ isUploading ? 'Uploading...' : 'Upload' }}
     </button>
 
@@ -38,11 +39,28 @@
         <thead>
           <tr>
             <th class="column-checkbox">Select</th>
-            <th class="column-id">ID</th>
-            <th>File Name</th>
-            <th class="column-extension">Extension</th>
-            <th class="upload-date-header">Upload Date</th>
-            <th class="column-size">Size</th>
+            <th [attr.aria-sort]="getAriaSort('fileName')">
+              <button type="button" class="sort-button" (click)="sortFiles('fileName')">
+                File Name <span class="sort-indicator" aria-hidden="true">{{ getSortIndicator('fileName') }}</span>
+              </button>
+            </th>
+            <th class="column-extension" [attr.aria-sort]="getAriaSort('fileExtension')">
+              <button type="button" class="sort-button" (click)="sortFiles('fileExtension')">
+                Extension <span class="sort-indicator" aria-hidden="true">{{ getSortIndicator('fileExtension') }}</span>
+              </button>
+            </th>
+            <th class="upload-date-header" [attr.aria-sort]="getAriaSort('uploadedAt')">
+              <button type="button" class="sort-button" (click)="sortFiles('uploadedAt')">
+                <span class="app-date-time-desktop">Upload Date &amp; Time</span>
+                <span class="app-date-time-mobile">Upload Date</span>
+                <span class="sort-indicator" aria-hidden="true">{{ getSortIndicator('uploadedAt') }}</span>
+              </button>
+            </th>
+            <th class="column-size" [attr.aria-sort]="getAriaSort('fileSize')">
+              <button type="button" class="sort-button" (click)="sortFiles('fileSize')">
+                Size <span class="sort-indicator" aria-hidden="true">{{ getSortIndicator('fileSize') }}</span>
+              </button>
+            </th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -51,7 +69,6 @@
             <td class="column-checkbox">
               <input type="checkbox" class="file-checkbox app-checkbox" [disabled]="true" [attr.aria-label]="'Select file ' + file.fileName">
             </td>
-            <td class="column-id">{{ file.id }}</td>
             <td class="file-name-cell">
               <button type="button" class="file-name-button" [attr.title]="file.fileName" (click)="toggleExpandedFile(file.id)">
                 <span class="file-name-text desktop-name">{{ getDisplayFileName(file.fileName) }}</span>
@@ -59,7 +76,10 @@
               </button>
             </td>
             <td class="column-extension">{{ file.fileExtension }}</td>
-            <td class="upload-date-cell">{{ formatShortDate(file.uploadedAt) }}</td>
+            <td class="upload-date-cell">
+              <span class="app-date-time-desktop">{{ formatDate(file.uploadedAt) }}</span>
+              <span class="app-date-time-mobile">{{ formatShortDate(file.uploadedAt) }}</span>
+            </td>
             <td class="column-size">{{ getFileSize(file.fileSize) }}</td>
             <td class="actions">
               <a class="btn-chat app-btn app-btn-primary app-btn-sm" [href]="'/chat?fileId=' + file.id" target="_blank">

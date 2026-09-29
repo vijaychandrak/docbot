@@ -75,7 +75,11 @@ export class ChatComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (history) => {
-          this.messages = history;
+          if (history.length === 0) {
+            this.messages = [this.createWelcomeMessage()];
+          } else {
+            this.messages = history;
+          }
           this.isLoadingHistory = false;
           setTimeout(() => this.scrollToBottom(), 100);
         },
@@ -84,6 +88,18 @@ export class ChatComponent implements OnInit, OnDestroy {
           console.error('Error loading chat history:', error);
         }
       });
+  }
+
+  /**
+   * Create a helpful welcome message for new chats
+   */
+  private createWelcomeMessage(): ChatMessage {
+    return {
+      id: 'welcome-message',
+      sender: 'bot',
+      message: 'Hello! I’m ready to help with your document. Ask me questions about the file, request a summary, explain key points, find details, compare sections, or help with next steps. I can answer questions related to your documents and help you work through them quickly.',
+      timestamp: new Date()
+    };
   }
 
   /**
