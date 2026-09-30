@@ -13,7 +13,7 @@ import { AuthRequest } from '../../models/auth.model';
     styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-    username = '';
+    email = '';
     password = '';
     errorMessage = '';
     isLoading = false;
@@ -21,7 +21,7 @@ export class LoginComponent {
     constructor(private authService: AuthService, private router: Router) { }
 
     login(): void {
-        if (!this.username.trim() || !this.password.trim()) {
+        if (!this.email.trim() || !this.password.trim()) {
             this.errorMessage = 'Please fill in all fields';
             return;
         }
@@ -30,7 +30,7 @@ export class LoginComponent {
         this.errorMessage = '';
 
         const request: AuthRequest = {
-            username: this.username,
+            email: this.email,
             password: this.password
         };
 

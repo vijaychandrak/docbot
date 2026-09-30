@@ -1,0 +1,31 @@
+<main class="profile-page">
+    <a class="profile-back" routerLink="/">Back to documents</a>
+
+    <header class="profile-heading">
+        <p class="profile-kicker">ACCOUNT</p>
+        <h1>My Profile</h1>
+    </header>
+
+    <section class="profile-identity" aria-label="Account identity">
+        <span class="profile-avatar" role="img" [attr.aria-label]="'Profile initials: ' + userInitials">{{ userInitials }}</span>
+        <div class="profile-name">
+            <h2>{{ user?.firstName }} {{ user?.lastName }}</h2>
+            <p>{{ user?.email }}</p>
+        </div>
+    </section>
+
+    <dl class="profile-details">
+        <div class="profile-detail">
+            <dt>First name</dt>
+            <dd>{{ user?.firstName }}</dd>
+        </div>
+        <div class="profile-detail" *ngIf="user?.lastName">
+            <dt>Last name</dt>
+            <dd>{{ user?.lastName }}</dd>
+        </div>
+        <div class="profile-detail">
+            <dt>Email</dt>
+            <dd>{{ user?.email }}</dd>
+        </div>
+    </dl>
+</main>

@@ -7,9 +7,15 @@
 
         <form (ngSubmit)="register()" class="auth-form">
             <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" [(ngModel)]="username" name="username" placeholder="Choose a username"
-                    [disabled]="isLoading" autocomplete="username">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" [(ngModel)]="firstName" name="firstName" placeholder="Enter your first name"
+                    [disabled]="isLoading" autocomplete="given-name">
+            </div>
+
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" [(ngModel)]="lastName" name="lastName" placeholder="Enter your last name"
+                    [disabled]="isLoading" autocomplete="family-name">
             </div>
 
             <div class="form-group">

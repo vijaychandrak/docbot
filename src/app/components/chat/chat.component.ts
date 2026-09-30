@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ChatService } from '../../services/chat.service';
 import { FileService } from '../../services/file.service';
 import { ChatMessage, ChatRequest } from '../../models/chat.model';
@@ -28,6 +28,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private chatService: ChatService,
     private fileService: FileService
   ) { }
@@ -47,6 +48,13 @@ export class ChatComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  backToFiles(): void {
+    window.close();
+    if (!window.closed) {
+      this.router.navigate(['/files']);
+    }
   }
 
   /**

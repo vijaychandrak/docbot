@@ -23,7 +23,9 @@
     </button>
 
     <div class="progress" *ngIf="isUploading">
-      <div class="progress-bar" [style.width.%]="uploadProgress">{{ uploadProgress }}%</div>
+      <progress class="progress-bar" max="100" [value]="uploadProgress"
+        [attr.aria-label]="'Upload progress: ' + uploadProgress + '%'">{{ uploadProgress }}%</progress>
+      <span class="progress-label" aria-hidden="true">{{ uploadProgress }}%</span>
     </div>
 
     <div class="message" [ngClass]="{ error: uploadMessage.includes('Error') }" *ngIf="uploadMessage">
@@ -82,11 +84,28 @@
             </td>
             <td class="column-size">{{ getFileSize(file.fileSize) }}</td>
             <td class="actions">
-              <a class="btn-chat app-btn app-btn-primary app-btn-sm" [href]="'/chat?fileId=' + file.id" target="_blank">
-                Chat
+              <a class="btn-chat app-btn app-btn-primary app-btn-sm" [href]="'/chat?fileId=' + file.id" target="_blank"
+                rel="noopener noreferrer" (click)="openChatWindow($event, file.id)"
+                [attr.aria-label]="'Open chat for ' + file.fileName" [title]="'Open chat for ' + file.fileName">
+                <span class="chat-button-content">
+                  <svg class="chat-button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 8V4H8" />
+                    <rect width="16" height="12" x="4" y="8" rx="2" />
+                    <path d="M2 14h2M20 14h2M9 13v2M15 13v2" />
+                  </svg>
+                </span>
               </a>
-              <button type="button" class="btn-delete app-btn app-btn-danger app-btn-sm" (click)="openDeleteModal(file.id)">
-                Delete
+              <button type="button" class="file-action app-btn app-btn-danger app-btn-sm" (click)="openDeleteModal(file.id)"
+                [attr.aria-label]="'Delete ' + file.fileName" [title]="'Delete ' + file.fileName">
+                <svg class="file-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M3 6h18" />
+                  <path d="M8 6V4h8v2" />
+                  <path d="m19 6-1 14H6L5 6" />
+                  <path d="M10 11v6" />
+                  <path d="M14 11v6" />
+                </svg>
               </button>
             </td>
           </tr>

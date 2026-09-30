@@ -1,0 +1,139 @@
+.profile-page {
+  width: min(100% - 40px, 720px);
+  margin: 0 auto;
+  padding: 32px 0 64px;
+  color: #29263a;
+}
+
+.profile-back {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  color: #554a78;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.profile-back:hover {
+  color: #30274f;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.profile-heading {
+  margin: 32px 0 28px;
+}
+
+.profile-kicker {
+  margin-bottom: 8px;
+  color: #746a8d;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.profile-heading h1 {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.profile-identity {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 24px 0;
+  border-top: 1px solid #dcd9e4;
+  border-bottom: 1px solid #dcd9e4;
+}
+
+.profile-avatar {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  flex: 0 0 64px;
+  border: 3px solid white;
+  border-radius: 50%;
+  background: #f2d6a2;
+  box-shadow: 0 0 0 1px #d9c398, 0 5px 14px rgba(41, 38, 58, 0.13);
+  color: #3e3551;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.profile-name {
+  min-width: 0;
+}
+
+.profile-name h2 {
+  overflow-wrap: anywhere;
+  font-size: 19px;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.profile-name p {
+  margin-top: 4px;
+  overflow-wrap: anywhere;
+  color: #706b7c;
+  font-size: 14px;
+}
+
+.profile-details {
+  margin: 8px 0 0;
+}
+
+.profile-detail {
+  display: grid;
+  grid-template-columns: minmax(110px, 180px) minmax(0, 1fr);
+  gap: 16px;
+  padding: 18px 0;
+  border-bottom: 1px solid #e5e3e9;
+}
+
+.profile-detail dt {
+  color: #706b7c;
+  font-size: 14px;
+}
+
+.profile-detail dd {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: #29263a;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .profile-page {
+    width: min(100% - 28px, 720px);
+    padding-top: 20px;
+  }
+
+  .profile-heading {
+    margin: 24px 0 20px;
+  }
+
+  .profile-identity {
+    gap: 14px;
+    padding: 20px 0;
+  }
+
+  .profile-avatar {
+    width: 56px;
+    height: 56px;
+    flex-basis: 56px;
+    font-size: 18px;
+  }
+
+  .profile-name h2 {
+    font-size: 17px;
+  }
+
+  .profile-detail {
+    grid-template-columns: minmax(84px, 110px) minmax(0, 1fr);
+    gap: 12px;
+  }
+}

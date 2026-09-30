@@ -1,0 +1,116 @@
+<section class="my-files-page">
+  <header class="files-heading">
+    <div>
+      <p class="files-eyebrow">YOUR LIBRARY</p>
+      <h1>My files</h1>
+      <p class="files-subtitle">Your documents, all in one place.</p>
+    </div>
+    <label class="upload-button" [class.is-disabled]="isUploading">
+      <span aria-hidden="true">+</span>
+      <span>{{ isUploading ? 'Uploading...' : 'Upload new file' }}</span>
+      <input type="file" (change)="onFileSelected($event)" [disabled]="isUploading" aria-label="Upload a new file">
+    </label>
+  </header>
+
+  <div class="upload-progress" *ngIf="isUploading" role="status">
+    <div class="progress-copy">
+      <span>{{ uploadMessage }}</span>
+      <span>{{ uploadProgress }}%</span>
+    </div>
+    <progress max="100" [value]="uploadProgress" [attr.aria-label]="'Upload progress: ' + uploadProgress + '%'">
+      {{ uploadProgress }}%
+    </progress>
+  </div>
+
+  <p class="files-message" [class.is-error]="uploadError" *ngIf="uploadMessage && !isUploading" role="status">
+    {{ uploadMessage }}
+  </p>
+
+  <section class="files-panel" aria-label="Uploaded files">
+    <div class="files-panel-heading">
+      <div>
+        <h2>Uploaded files</h2>
+        <p>{{ files.length }} {{ files.length === 1 ? 'file' : 'files' }}</p>
+      </div>
+      <button type="button" class="refresh-button" (click)="loadFiles()" [disabled]="isLoading" aria-label="Refresh file list" title="Refresh file list">
+        <span aria-hidden="true">&#8635;</span>
+      </button>
+    </div>
+
+    <div class="loading-state" *ngIf="isLoading" role="status">Loading your files...</div>
+
+    <div class="table-scroll" *ngIf="!isLoading && files.length">
+      <table class="files-table">
+        <thead>
+          <tr>
+            <th class="select-column">Select</th>
+            <th>File Name</th>
+            <th class="extension-column">Extension</th>
+            <th class="date-column">
+              <span class="desktop-date">Upload Date &amp; Time</span>
+              <span class="mobile-date">Upload Date</span>
+            </th>
+            <th class="size-column">Size</th>
+            <th class="actions-column">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let file of files">
+            <td class="select-column"><span class="file-mark" aria-hidden="true">▤</span></td>
+            <td class="file-name-cell" [title]="file.fileName">{{ getBaseFileName(file.fileName) }}</td>
+            <td class="extension-column"><span class="file-extension">{{ file.fileExtension || 'FILE' }}</span></td>
+            <td class="date-cell">
+              <span class="desktop-date">{{ formatDate(file.uploadedAt) }}</span>
+              <span class="mobile-date">{{ formatShortDate(file.uploadedAt) }}</span>
+            </td>
+            <td class="size-column">{{ formatFileSize(file.fileSize) }}</td>
+            <td class="actions-cell">
+              <button type="button" class="file-action app-btn app-btn-primary app-btn-sm" (click)="downloadFile(file)"
+                [disabled]="downloadingFileId === file.id"
+                [attr.aria-label]="(downloadingFileId === file.id ? 'Downloading ' : 'Download ') + file.fileName"
+                [title]="(downloadingFileId === file.id ? 'Downloading ' : 'Download ') + file.fileName">
+                <svg class="file-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <path d="m7 10 5 5 5-5" />
+                  <path d="M12 15V3" />
+                </svg>
+              </button>
+              <button type="button" class="file-action app-btn app-btn-danger app-btn-sm" (click)="requestDelete(file)"
+                [attr.aria-label]="'Delete ' + file.fileName" [title]="'Delete ' + file.fileName">
+                <svg class="file-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M3 6h18" />
+                  <path d="M8 6V4h8v2" />
+                  <path d="m19 6-1 14H6L5 6" />
+                  <path d="M10 11v6" />
+                  <path d="M14 11v6" />
+                </svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="empty-state" *ngIf="!isLoading && !files.length">
+      <span class="empty-icon" aria-hidden="true">▤</span>
+      <h3>No files yet</h3>
+      <p>Upload a document to see it here.</p>
+    </div>
+  </section>
+
+  <div class="delete-backdrop" *ngIf="fileToDelete" (click)="cancelDelete()">
+    <section class="delete-dialog" role="dialog" aria-modal="true" aria-labelledby="delete-title" (click)="$event.stopPropagation()">
+      <span class="delete-icon" aria-hidden="true">!</span>
+      <h2 id="delete-title">Delete this file?</h2>
+      <p>{{ fileToDelete.fileName }} and its chat history will be permanently removed.</p>
+      <div class="delete-actions">
+        <button type="button" class="cancel-button" (click)="cancelDelete()" [disabled]="isDeleting">Cancel</button>
+        <button type="button" class="confirm-delete-button" (click)="confirmDelete()" [disabled]="isDeleting">
+          {{ isDeleting ? 'Deleting...' : 'Delete file' }}
+        </button>
+      </div>
+    </section>
+  </div>
+</section>

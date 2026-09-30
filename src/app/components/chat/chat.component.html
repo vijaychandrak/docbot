@@ -4,7 +4,7 @@
       <h2>Chat with AI Agent</h2>
       <p class="file-details">File: <strong>{{ file.fileName }}</strong></p>
     </div>
-    <a routerLink="/" class="btn-back">← Back to Files</a>
+    <button type="button" class="btn-back" (click)="backToFiles()">← Back to Files</button>
   </div>
 
   <div class="chat-content" *ngIf="!isLoadingHistory; else loadingHistory">

@@ -43,6 +43,12 @@ export class FileService {
     return this.http.get<UploadedFile>(`${this.apiUrl}/${fileId}`);
   }
 
+  downloadFile(fileId: string): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/${encodeURIComponent(fileId)}/download`, {
+      responseType: 'blob'
+    });
+  }
+
   /**
    * Delete a file
    * @param fileId - The ID of the file to delete

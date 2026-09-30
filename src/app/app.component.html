@@ -3,8 +3,59 @@
         <a routerLink="/">DocBot</a>
     </div>
     <div class="nav-actions">
-        <span class="nav-user">{{ authService.getUser()?.username }}</span>
-        <button class="btn-logout" (click)="logout()">Logout</button>
+        <span class="nav-user" role="img" [attr.aria-label]="'Profile initials: ' + userInitials">{{ userInitials }}</span>
+        <button class="btn-logout" type="button" aria-label="Log out" title="Log out" (click)="logout()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M10 17l5-5-5-5" />
+                <path d="M15 12H3" />
+                <path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6" />
+            </svg>
+        </button>
     </div>
 </nav>
-<router-outlet></router-outlet>
+<div class="app-frame" [class.public-frame]="!authService.isLoggedIn()"
+    [class.menu-collapsed]="isSideMenuCollapsed" [class.chat-mode]="isChatRoute">
+    <aside class="side-menu" *ngIf="authService.isLoggedIn() && !isChatRoute" aria-label="Main navigation">
+        <div class="side-menu-header">
+            <p class="side-menu-label">WORKSPACE</p>
+            <button type="button" class="side-menu-toggle" (click)="toggleSideMenu()"
+                [attr.aria-expanded]="!isSideMenuCollapsed"
+                [attr.aria-label]="isSideMenuCollapsed ? 'Expand navigation' : 'Collapse navigation'"
+                [title]="isSideMenuCollapsed ? 'Expand navigation' : 'Collapse navigation'">
+                <svg *ngIf="!isSideMenuCollapsed" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <path d="M9 3v18M15 9l-3 3 3 3" />
+                </svg>
+                <svg *ngIf="isSideMenuCollapsed" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <path d="M9 3v18M12 9l3 3-3 3" />
+                </svg>
+            </button>
+        </div>
+        <nav class="side-menu-links" [class.mobile-collapsed]="isSideMenuCollapsed">
+            <a routerLink="/doc-ai" [class.active]="isDocAiActive" aria-label="Doc AI" title="Doc AI">
+                <span class="side-menu-icon ai-icon" aria-hidden="true">✧</span>
+                <span>Doc AI</span>
+            </a>
+            <a routerLink="/files" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                aria-label="My files" title="My files">
+                <span class="side-menu-icon files-icon" aria-hidden="true">▤</span>
+                <span>My files</span>
+            </a>
+            <a routerLink="/profile" routerLinkActive="active" aria-label="My Profile" title="My Profile">
+                <span class="side-menu-icon profile-icon" aria-hidden="true">◉</span>
+                <span>My Profile</span>
+            </a>
+            <a routerLink="/billing" routerLinkActive="active" aria-label="Billing" title="Billing">
+                <span class="side-menu-icon billing-icon" aria-hidden="true">◒</span>
+                <span>Billing</span>
+            </a>
+        </nav>
+    </aside>
+    <main class="content-area">
+        <router-outlet></router-outlet>
+    </main>
+</div>

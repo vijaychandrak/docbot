@@ -145,6 +145,22 @@ export class FileUploadComponent implements OnInit {
     return this.sortDirection === 'asc' ? '↑' : '↓';
   }
 
+  openChatWindow(event: MouseEvent, fileId: string): void {
+    if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
+      return;
+    }
+
+    event.preventDefault();
+    const chatUrl = `/chat?fileId=${encodeURIComponent(fileId)}`;
+    const chatWindow = window.open(chatUrl, '_blank');
+
+    if (chatWindow) {
+      chatWindow.opener = null;
+    } else {
+      window.location.assign(chatUrl);
+    }
+  }
+
   getAriaSort(column: SortColumn): 'ascending' | 'descending' | null {
     if (this.sortColumn !== column) {
       return null;

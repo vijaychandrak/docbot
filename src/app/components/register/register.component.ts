@@ -13,7 +13,8 @@ import { RegisterRequest } from '../../models/auth.model';
     styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-    username = '';
+    firstName = '';
+    lastName = '';
     email = '';
     password = '';
     confirmPassword = '';
@@ -23,7 +24,7 @@ export class RegisterComponent {
     constructor(private authService: AuthService, private router: Router) { }
 
     register(): void {
-        if (!this.username.trim() || !this.email.trim() || !this.password.trim()) {
+        if (!this.firstName.trim() || !this.lastName.trim() || !this.email.trim() || !this.password.trim()) {
             this.errorMessage = 'Please fill in all fields';
             return;
         }
@@ -42,7 +43,8 @@ export class RegisterComponent {
         this.errorMessage = '';
 
         const request: RegisterRequest = {
-            username: this.username,
+            firstName: this.firstName,
+            lastName: this.lastName,
             email: this.email,
             password: this.password
         };
